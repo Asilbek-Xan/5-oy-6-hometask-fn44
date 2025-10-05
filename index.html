@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.css" rel="stylesheet" type="text/css" />
+  <title>5-oy 6-hometask</title>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#0f2027] to-[#2c5364] p-10">
+
+  <form id="form" class="bg-white/95 max-w-md mx-auto p-6 rounded-xl shadow-lg flex flex-col gap-4 mb-10">
+    <input type="text" name="name" placeholder="Mashina nomi:" class="input input-bordered w-full" />
+    <textarea name="description" placeholder="Mashina uchun izoh:" class="textarea textarea-bordered w-full"></textarea>
+    <button class="btn btn-primary" id="addButton">Qo'shish</button>
+    <button class="btn btn-primary hidden" id="editButton">Tahrirlash</button>
+  </form>
+
+  <h3 id="loader" class="text-white text-center mb-6 hidden">Loading . . .</h3>
+
+  <ul id="container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></ul>
+
+  <div id="pagination" class="flex justify-center items-center gap-2 mt-6"></div>
+
+  <ul id="toastContainer" class="flex flex-col gap-2 fixed top-5 right-5"></ul>
+
+  <template id="cardTemplate">
+    <li class="card bg-white shadow-xl p-5 rounded-xl hover:scale-105 transition">
+      <h2 class="text-xl font-bold text-gray-900"></h2>
+      <p class="text-gray-600 my-3"></p>
+      <div>
+        <button class="js-delete btn btn-error text-white">O'chirish</button>
+        <button class="js-edit btn btn-error text-white mt-10">Tahrirlash</button>
+      </div>
+    </li>
+  </template>
+
+  <template id="toastTemplate">
+    <li class="bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center justify-between">
+      <p></p>
+      <button class="ml-3 font-bold">Yopish</button>
+    </li>
+  </template>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
