@@ -1,3 +1,4 @@
+import { checkAuth } from "./check-auth.js";
 import { elAddButton, elContainer, elEditButton, elForm, elLoader, elTemplateCard } from "./html-selection.js";
 import { toast } from "./toast.js";
 
@@ -86,15 +87,32 @@ function init() {
 }
 
 function deleteCar(id) {
-  fetch(`https://json-api.uz/api/project/fn44/cars/${id}`,{method:'DELETE'})
-  .then(res=>{if(!res.ok)throw new Error("Server xatosi");return res.text();})
-  .then(()=>{toast("Mashina o'chirildi ✅");init();});
+  fetch(`https://json-api.uz/api/project/fn44/cars/${id}`, { method: 'DELETE' })
+    .then(res => {
+      if (!res.ok) throw new Error("Server xatosi");
+      return res.text();
+    })
+    .then(() => {
+      toast("Mashina o'chirildi ✅");
+      init();
+    })
+    .catch(err => {
+      console.error("O‘chirishda xatolik:", err.message);
+      toast("O‘chirishda xatolik yuz berdi ❌");
+    })
+    .finally(() => {
+      elLoader.style.display = "none";
+    });
 }
+
 
 function addCar(car) {
   fetch(`https://json-api.uz/api/project/fn44/cars/`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(car)})
   .then(res=>res.json()).then(()=>init());
+
 }
+
+
 
 function editCar(car) {
   fetch(`https://json-api.uz/api/project/fn44/cars/${car.id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(car)})
@@ -115,7 +133,17 @@ elForm.addEventListener("submit",e=>{
 });
 
 elContainer.addEventListener("click",e=>{
-  if(e.target.classList.contains("js-delete")){ if(confirm("Qo'lingiz tegib ketmadimi, yoki Rostdan ham o'chirmoqchimisiz?")){ e.target.innerText="Loading . . ."; deleteCar(e.target.id); } }
+  if(e.target.classList.contains("js-delete")){
+    if(checkAuth()) {
+      if(confirm("Rostdan ham o'chirmoqchimisiz?")) {
+        e.target.innerText = "Loading . . .";
+        deleteCar(e.target.id);
+      }
+    }else {
+      alert("O'chirmoqchi bo'lsangiz, avval tizimga kiring! ⚠️");
+      window.location.assign("../pages/login.html");
+    }
+    }
   if(e.target.classList.contains("js-edit")){ e.target.innerHTML="Loading . . ."; editedElId=e.target.id; elAddButton.style.display="none"; elEditButton.style.display="block";
     fetch(`https://json-api.uz/api/project/fn44/cars/${e.target.id}`)
     .then(res=>res.json())
@@ -124,3 +152,5 @@ elContainer.addEventListener("click",e=>{
     .finally(()=>{ e.target.innerText="Tahrirlash"; });
   }
 });
+
+
